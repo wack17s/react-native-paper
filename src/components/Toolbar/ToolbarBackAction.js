@@ -18,6 +18,7 @@ const getBackIcon = Platform.select({
     return <Icon name="keyboard-arrow-left" size={36} color={iconColor} />;
   },
   android: () => 'arrow-back',
+  web: () => 'arrow-back',
 });
 
 type Props = {
