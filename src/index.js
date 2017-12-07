@@ -35,6 +35,7 @@ export { default as RadioButton } from './components/RadioButton';
 export { default as RadioButtonGroup } from './components/RadioButtonGroup';
 export { default as SearchBar } from './components/SearchBar';
 export { default as Switch } from './components/Switch';
+export { default as AnimatedFAB } from './components/AnimatedFAB';
 export { default as Toolbar } from './components/Toolbar/Toolbar';
 export { default as ToolbarAction } from './components/Toolbar/ToolbarAction';
 export {
