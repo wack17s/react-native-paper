@@ -35,6 +35,10 @@ type Props = {
    */
   hasError: boolean,
   /**
+   * Text to replace the helper text with on error.
+   */
+  errorText?: string,
+  /**
    * Callback that is called when the text input's text changes. Changed text is passed as an argument to the callback handler.
    */
   onChangeText?: Function,
@@ -221,6 +225,16 @@ class TextInput extends React.Component<Props, State> {
     return this._root.blur(...args);
   }
 
+  renderUnderlineText(text?: string, containerStyle: Object, color: string) {
+    return (
+      text && (
+        <Animated.View style={containerStyle}>
+          {text && <Text style={[styles.helperText, { color }]}>{text}</Text>}
+        </Animated.View>
+      )
+    );
+  }
+
   render() {
     const {
       value,
@@ -228,6 +242,7 @@ class TextInput extends React.Component<Props, State> {
       label,
       helperText,
       hasError,
+      errorText,
       underlineColor,
       style,
       theme,
@@ -259,14 +274,8 @@ class TextInput extends React.Component<Props, State> {
       outputRange: [inactiveColor, labelColor],
     });
 
-    const translateY = value
-      ? -22
-      : this.state.focused.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -22],
-        });
-
-    const translateX =
+    /* Wiggle when error appears and label is minimized */
+    const labelTranslateX =
       value && hasError
         ? this.state.errorShown.interpolate({
             inputRange: [0, 0.5, 1],
@@ -274,7 +283,15 @@ class TextInput extends React.Component<Props, State> {
           })
         : 0;
 
-    const fontSize = value
+    /* Move label to top if value is set */
+    const labelTranslateY = value
+      ? -22
+      : this.state.focused.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -22],
+        });
+
+    const labelFontSize = value
       ? 12
       : this.state.focused.interpolate({
           inputRange: [0, 1],
@@ -284,13 +301,40 @@ class TextInput extends React.Component<Props, State> {
     const labelStyle = {
       color: labelColorAnimation,
       fontFamily,
-      fontSize,
+      fontSize: labelFontSize,
       transform: [
         {
-          translateX,
+          translateX: labelTranslateX,
         },
         {
-          translateY,
+          translateY: labelTranslateY,
+        },
+      ],
+    };
+
+    const underlineArea = {
+      height: Animated.multiply(
+        16,
+        helperText ? 1 : errorText ? this.state.errorShown : 0
+      ),
+      width: '100%',
+    };
+
+    const helperTextContainer = {
+      opacity: errorText
+        ? Animated.add(1, Animated.multiply(this.state.errorShown, -1))
+        : 1,
+    };
+
+    const errorTextContainer = {
+      position: 'absolute',
+      opacity: this.state.errorShown,
+      transform: [
+        {
+          translateY: this.state.errorShown.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-16, 0],
+          }),
         },
       ],
     };
@@ -358,10 +402,19 @@ class TextInput extends React.Component<Props, State> {
             ]}
           />
         </View>
-        {helperText && (
-          <Text style={[styles.helperText, { color: helperTextColor }]}>
-            {helperText}
-          </Text>
+        {(helperText || errorText) && (
+          <Animated.View style={underlineArea}>
+            {this.renderUnderlineText(
+              helperText,
+              helperTextContainer,
+              helperTextColor
+            )}
+            {this.renderUnderlineText(
+              errorText,
+              errorTextContainer,
+              errorTextColor
+            )}
+          </Animated.View>
         )}
       </View>
     );
