@@ -39,11 +39,12 @@ class TextInputExample extends React.Component<Props, State> {
         />
         <TextInput
           style={styles.inputContainerStyle}
-          label="Normal input with helper"
+          label="Input with helper text"
           placeholder="Type more than three characters"
           helperText="Helper text"
           value={this.state.errorInputText}
           hasError={this.state.errorInputText.length > 3}
+          errorText="Error text"
           onChangeText={errorInputText => this.setState({ errorInputText })}
         />
         <TextInput
