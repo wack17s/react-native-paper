@@ -1,7 +1,15 @@
 /* @flow */
 
 import color from 'color';
-import { indigo500, indigo700, pinkA200, black, white, grey50 } from './colors';
+import {
+  indigo500,
+  indigo700,
+  pinkA200,
+  black,
+  white,
+  grey50,
+  redA400,
+} from './colors';
 import fonts from './fonts';
 
 export default {
@@ -13,6 +21,7 @@ export default {
     accent: pinkA200,
     background: grey50,
     paper: white,
+    error: redA400,
     text: black,
     secondaryText: color(black)
       .alpha(0.7)

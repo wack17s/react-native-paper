@@ -9,6 +9,7 @@ export type Theme = {
     background: string,
     paper: string,
     accent: string,
+    error: string,
     text: string,
     secondaryText: string,
     disabled: string,
