@@ -33,17 +33,12 @@ class TextInputExample extends React.Component<Props, State> {
           label="Normal input"
           placeholder="Type something"
           value={this.state.text}
-          hasError
           onChangeText={text => this.setState({ text })}
         />
         <TextInput
+          disabled
           style={styles.inputContainerStyle}
-          label="Normal input with helper"
-          placeholder="Type something"
-          helperText="I can help"
-          value={this.state.text}
-          hasError={this.state.text.length > 3}
-          onChangeText={text => this.setState({ text })}
+          label="Disabled Input"
         />
       </ScrollView>
     );
