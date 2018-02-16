@@ -71,6 +71,7 @@ type Props = {
 
 type State = {
   focused: Animated.Value,
+  errorShown: Animated.Value,
   placeholder: ?string,
 };
 
@@ -122,11 +123,20 @@ class TextInput extends React.Component<Props, State> {
 
     this.state = {
       focused: new Animated.Value(0),
+      errorShown: new Animated.Value(props.hasError ? 1 : 0),
       placeholder: '',
     };
   }
 
   state: State;
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.hasError != this.props.hasError) {
+      (nextProps.hasError ? this._animateFocus : this._animateBlur)(
+        this.state.errorShown
+      );
+    }
+  }
 
   componentDidUpdate(prevProps) {
     if (
@@ -162,30 +172,30 @@ class TextInput extends React.Component<Props, State> {
   _root: any;
   _setRef: any = (c: Object) => (this._root = c);
 
-  _animateFocus = () => {
-    Animated.timing(this.state.focused, {
+  _animateFocus = (animatedValue: Animated.Value) => {
+    Animated.timing(animatedValue, {
       toValue: 1,
       duration: 150,
     }).start(this._setPlaceholder);
   };
 
-  _animateBlur = () => {
+  _animateBlur = (animatedValue: Animated.Value) => {
     this._removePlaceholder();
-    Animated.timing(this.state.focused, {
+    Animated.timing(animatedValue, {
       toValue: 0,
       duration: 180,
     }).start();
   };
 
   _handleFocus = (...args) => {
-    this._animateFocus();
+    this._animateFocus(this.state.focused);
     if (this.props.onFocus) {
       this.props.onFocus(...args);
     }
   };
 
   _handleBlur = (...args) => {
-    this._animateBlur();
+    this._animateBlur(this.state.focused);
     if (this.props.onBlur) {
       this.props.onBlur(...args);
     }
@@ -237,8 +247,7 @@ class TextInput extends React.Component<Props, State> {
     if (!disabled) {
       inputTextColor = colors.text;
       labelColor = (hasError && errorColor) || primaryColor;
-      bottomLineColor =
-        underlineColor || (hasError && errorColor) || primaryColor;
+      bottomLineColor = underlineColor || primaryColor;
       helperTextColor =
         underlineColor || (hasError && errorTextColor) || colors.helperText;
     } else {
@@ -274,14 +283,14 @@ class TextInput extends React.Component<Props, State> {
       ],
     };
 
-    const bottomLineStyle = {
-      backgroundColor: bottomLineColor,
-      transform: [{ scaleX: this.state.focused }],
-      opacity: this.state.focused.interpolate({
+    const bottomLineStyle = (color: string, animatedValue: Animated.Value) => ({
+      backgroundColor: color,
+      transform: [{ scaleX: animatedValue }],
+      opacity: animatedValue.interpolate({
         inputRange: [0, 0.1, 1],
         outputRange: [0, 1, 1],
       }),
-    };
+    });
 
     return (
       <View style={style}>
@@ -319,7 +328,21 @@ class TextInput extends React.Component<Props, State> {
             ]}
           />
           <Animated.View
-            style={[styles.bottomLine, styles.focusLine, bottomLineStyle]}
+            style={[
+              styles.bottomLine,
+              styles.focusLine,
+              bottomLineStyle(bottomLineColor, this.state.focused),
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.bottomLine,
+              styles.focusLine,
+              bottomLineStyle(
+                errorColor,
+                Animated.multiply(this.state.focused, this.state.errorShown)
+              ),
+            ]}
           />
         </View>
         {helperText && (
