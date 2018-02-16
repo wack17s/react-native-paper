@@ -303,12 +303,8 @@ class TextInput extends React.Component<Props, State> {
       fontFamily,
       fontSize: labelFontSize,
       transform: [
-        {
-          translateX: labelTranslateX,
-        },
-        {
-          translateY: labelTranslateY,
-        },
+        { translateX: labelTranslateX },
+        { translateY: labelTranslateY },
       ],
     };
 
