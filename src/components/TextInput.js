@@ -27,6 +27,10 @@ type Props = {
    */
   placeholder?: string,
   /**
+   * Helper text to display under the input.
+   */
+  helperText?: string,
+  /**
    * Callback that is called when the text input's text changes. Changed text is passed as an argument to the callback handler.
    */
   onChangeText?: Function,
@@ -207,6 +211,7 @@ class TextInput extends React.Component<Props, State> {
       value,
       disabled,
       label,
+      helperText,
       underlineColor,
       style,
       theme,
@@ -217,14 +222,15 @@ class TextInput extends React.Component<Props, State> {
     const primaryColor = colors.primary;
     const inactiveColor = colors.disabled;
 
-    let inputTextColor, labelColor, bottomLineColor;
+    let inputTextColor, labelColor, bottomLineColor, helperTextColor;
 
     if (!disabled) {
       inputTextColor = colors.text;
       labelColor = primaryColor;
       bottomLineColor = underlineColor || primaryColor;
+      helperTextColor = colors.placeholder;
     } else {
-      inputTextColor = labelColor = bottomLineColor = inactiveColor;
+      inputTextColor = labelColor = bottomLineColor = helperTextColor = inactiveColor;
     }
 
     const labelColorAnimation = this.state.focused.interpolate({
@@ -301,6 +307,11 @@ class TextInput extends React.Component<Props, State> {
             style={[styles.bottomLine, styles.focusLine, bottomLineStyle]}
           />
         </View>
+        {helperText && (
+          <Text style={[styles.helperText, { color: helperTextColor }]}>
+            {helperText}
+          </Text>
+        )}
       </View>
     );
   }
@@ -336,6 +347,10 @@ const styles = StyleSheet.create({
   },
   focusLine: {
     height: StyleSheet.hairlineWidth * 4,
+  },
+  helperText: {
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 
