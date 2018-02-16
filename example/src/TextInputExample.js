@@ -47,10 +47,10 @@ class TextInputExample extends React.Component<Props, State> {
           onChangeText={errorInputText => this.setState({ errorInputText })}
         />
         <TextInput
-+          disabled
-           style={styles.inputContainerStyle}
-+          label="Disabled Input"
-         />
+          disabled
+          style={styles.inputContainerStyle}
+          label="Disabled Input"
+        />
       </ScrollView>
     );
   }
