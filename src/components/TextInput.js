@@ -31,6 +31,10 @@ type Props = {
    */
   helperText?: string,
   /**
+   * Whether to style the TextInput with error style.
+   */
+  hasError: boolean,
+  /**
    * Callback that is called when the text input's text changes. Changed text is passed as an argument to the callback handler.
    */
   onChangeText?: Function,
@@ -110,6 +114,7 @@ type State = {
 class TextInput extends React.Component<Props, State> {
   static defaultProps = {
     disabled: false,
+    hasError: false,
   };
 
   constructor(props) {
@@ -212,6 +217,7 @@ class TextInput extends React.Component<Props, State> {
       disabled,
       label,
       helperText,
+      hasError,
       underlineColor,
       style,
       theme,
@@ -219,16 +225,22 @@ class TextInput extends React.Component<Props, State> {
     } = this.props;
     const { colors, fonts } = theme;
     const fontFamily = fonts.regular;
-    const primaryColor = colors.primary;
-    const inactiveColor = colors.disabled;
+    const {
+      primary: primaryColor,
+      disabled: inactiveColor,
+      error: errorColor,
+      errorText: errorTextColor,
+    } = colors;
 
     let inputTextColor, labelColor, bottomLineColor, helperTextColor;
 
     if (!disabled) {
       inputTextColor = colors.text;
-      labelColor = primaryColor;
-      bottomLineColor = underlineColor || primaryColor;
-      helperTextColor = underlineColor || colors.helperText;
+      labelColor = (hasError && errorColor) || primaryColor;
+      bottomLineColor =
+        underlineColor || (hasError && errorColor) || primaryColor;
+      helperTextColor =
+        underlineColor || (hasError && errorTextColor) || colors.helperText;
     } else {
       inputTextColor = labelColor = bottomLineColor = helperTextColor = inactiveColor;
     }
@@ -301,7 +313,10 @@ class TextInput extends React.Component<Props, State> {
         />
         <View pointerEvents="none" style={styles.bottomLineContainer}>
           <View
-            style={[styles.bottomLine, { backgroundColor: inactiveColor }]}
+            style={[
+              styles.bottomLine,
+              { backgroundColor: (hasError && errorColor) || inactiveColor },
+            ]}
           />
           <Animated.View
             style={[styles.bottomLine, styles.focusLine, bottomLineStyle]}
