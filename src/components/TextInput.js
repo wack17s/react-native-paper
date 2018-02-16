@@ -265,6 +265,15 @@ class TextInput extends React.Component<Props, State> {
           inputRange: [0, 1],
           outputRange: [0, -22],
         });
+
+    const translateX =
+      value && hasError
+        ? this.state.errorShown.interpolate({
+            inputRange: [0, 0.5, 1],
+            outputRange: [0, 4, 0],
+          })
+        : 0;
+
     const fontSize = value
       ? 12
       : this.state.focused.interpolate({
@@ -277,6 +286,9 @@ class TextInput extends React.Component<Props, State> {
       fontFamily,
       fontSize,
       transform: [
+        {
+          translateX,
+        },
         {
           translateY,
         },
@@ -340,6 +352,7 @@ class TextInput extends React.Component<Props, State> {
               styles.focusLine,
               bottomLineStyle(
                 errorColor,
+                // $FlowFixMe$
                 Animated.multiply(this.state.focused, this.state.errorShown)
               ),
             ]}
