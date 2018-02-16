@@ -12,6 +12,7 @@ type Props = {
 
 type State = {
   text: string,
+  errorInputText: string,
 };
 
 class TextInputExample extends React.Component<Props, State> {
@@ -22,6 +23,7 @@ class TextInputExample extends React.Component<Props, State> {
 
   state = {
     text: '',
+    errorInputText: '',
   };
 
   render() {
@@ -33,18 +35,22 @@ class TextInputExample extends React.Component<Props, State> {
           label="Normal input"
           placeholder="Type something"
           value={this.state.text}
-          hasError
           onChangeText={text => this.setState({ text })}
         />
         <TextInput
           style={styles.inputContainerStyle}
           label="Normal input with helper"
-          placeholder="Type something"
-          helperText="I can help"
-          value={this.state.text}
-          hasError={this.state.text.length > 3}
-          onChangeText={text => this.setState({ text })}
+          placeholder="Type more than three characters"
+          helperText="Helper text"
+          value={this.state.errorInputText}
+          hasError={this.state.errorInputText.length > 3}
+          onChangeText={errorInputText => this.setState({ errorInputText })}
         />
+        <TextInput
++          disabled
+           style={styles.inputContainerStyle}
++          label="Disabled Input"
+         />
       </ScrollView>
     );
   }
