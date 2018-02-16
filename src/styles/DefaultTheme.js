@@ -26,6 +26,10 @@ export default {
       .alpha(0.38)
       .rgb()
       .string(),
+    helperText: color(black)
+      .alpha(0.54)
+      .rgb()
+      .string(),
   },
   fonts,
 };

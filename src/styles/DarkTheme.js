@@ -27,6 +27,10 @@ const DarkTheme: Theme = {
       .alpha(0.38)
       .rgb()
       .string(),
+    helperText: color(white)
+      .alpha(0.7)
+      .rgb()
+      .string(),
   },
 };
 
