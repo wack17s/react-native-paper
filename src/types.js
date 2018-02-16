@@ -15,6 +15,7 @@ export type Theme = {
     disabled: string,
     placeholder: string,
     helperText: string,
+    errorText: string,
   },
   fonts: {
     regular: string,
