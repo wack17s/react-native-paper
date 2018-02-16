@@ -228,7 +228,7 @@ class TextInput extends React.Component<Props, State> {
       inputTextColor = colors.text;
       labelColor = primaryColor;
       bottomLineColor = underlineColor || primaryColor;
-      helperTextColor = colors.placeholder;
+      helperTextColor = colors.helperText;
     } else {
       inputTextColor = labelColor = bottomLineColor = helperTextColor = inactiveColor;
     }
