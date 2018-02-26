@@ -21,7 +21,7 @@ type Props = {
   /**
    * Callback that is called when the user dismisses the dialog.
    */
-  onRequestClose: Function,
+  onDismiss: Function,
   /**
    * Determines Whether the dialog is visible.
    */
@@ -40,6 +40,11 @@ type Props = {
 /**
  * Dialogs inform users about a specific task and may contain critical information, require decisions, or involve multiple tasks.
  *
+ *  <div class="screenshots">
+ *   <img class="medium" src="screenshots/dialog-1.png" />
+ *   <img class="medium" src="screenshots/dialog-2.png" />
+ * </div>
+ *
  * ## Usage
  * ```js
  * export default class MyComponent extends React.Component {
@@ -57,7 +62,7 @@ type Props = {
  *         <Button onPress={this._showDialog}>Show Dialog</Button>
  *         <Dialog
  *            visible={visible}
- *            onRequestClose={this._hideDialog}
+ *            onDismiss={this._hideDialog}
  *         >
  *           <DialogTitle>Alert</DialogTitle>
  *           <DialogContent>
@@ -83,7 +88,7 @@ class Dialog extends React.Component<Props, void> {
     const {
       children,
       dismissable,
-      onRequestClose,
+      onDismiss,
       visible,
       style,
       theme,
@@ -113,17 +118,12 @@ class Dialog extends React.Component<Props, void> {
           return React.cloneElement(child, {
             style: { paddingTop: 24 },
           });
-        } else {
-          return child;
         }
+        return child;
       });
     }
     return (
-      <Modal
-        dismissable={dismissable}
-        onRequestClose={onRequestClose}
-        visible={visible}
-      >
+      <Modal dismissable={dismissable} onDismiss={onDismiss} visible={visible}>
         <AnimatedPaper style={[styles.container, { backgroundColor }, style]}>
           {title}
           {restOfChildrenWithoutTitle}

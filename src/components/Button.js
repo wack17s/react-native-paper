@@ -16,7 +16,7 @@ const AnimatedPaper = Animated.createAnimatedComponent(Paper);
 
 type Props = {
   /**
-   * Disable the button.
+   * Whether the button is disabled. A disabled button is greyed out and `onPress` is not called on touch.
    */
   disabled?: boolean,
   /**
@@ -24,11 +24,11 @@ type Props = {
    */
   compact?: boolean,
   /**
-   * Add elevation to button, as opposed to default flat appearance.
+   * Add elevation to button, as opposed to default flat appearance. Typically used on a flat surface.
    */
   raised?: boolean,
   /**
-   * Use to primary color from theme.
+   * Use to primary color from theme. Typically used to emphasize an action.
    */
   primary?: boolean,
   /**
@@ -70,7 +70,7 @@ type State = {
 };
 
 /**
- * Buttons communicate the action that will occur when the user touches them.
+ * A button is component that the user can press to trigger an action.
  *
  * <div class="screenshots">
  *   <img src="screenshots/button-raised.png" />
@@ -141,16 +141,12 @@ class Button extends React.Component<Props, State> {
           .alpha(0.12)
           .rgb()
           .string();
+      } else if (buttonColor) {
+        backgroundColor = buttonColor;
+      } else if (primary) {
+        backgroundColor = colors.primary;
       } else {
-        if (buttonColor) {
-          backgroundColor = buttonColor;
-        } else {
-          if (primary) {
-            backgroundColor = colors.primary;
-          } else {
-            backgroundColor = theme.dark ? '#535354' : white;
-          }
-        }
+        backgroundColor = theme.dark ? '#535354' : white;
       }
     } else {
       backgroundColor = 'transparent';
@@ -175,20 +171,14 @@ class Button extends React.Component<Props, State> {
             .alpha(0.26)
             .rgb()
             .string();
+    } else if (raised) {
+      textColor = isDark ? white : black;
+    } else if (buttonColor) {
+      textColor = buttonColor;
+    } else if (primary) {
+      textColor = colors.primary;
     } else {
-      if (raised) {
-        textColor = isDark ? white : black;
-      } else {
-        if (buttonColor) {
-          textColor = buttonColor;
-        } else {
-          if (primary) {
-            textColor = colors.primary;
-          } else {
-            textColor = theme.dark ? white : black;
-          }
-        }
-      }
+      textColor = theme.dark ? white : black;
     }
 
     const rippleColor = color(textColor)
