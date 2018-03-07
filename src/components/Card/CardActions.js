@@ -16,6 +16,9 @@ type Props = {
  *
  * ## Usage
  * ```js
+ * import * as React from 'react';
+ * import { Button, Card, CardActions } from 'react-native-paper';
+ *
  * const MyComponent = () => (
  *   <Card>
  *     <CardActions>
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     padding: 4,
   },
 });

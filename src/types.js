@@ -5,13 +5,11 @@ export type Theme = {
   roundness: number,
   colors: {
     primary: string,
-    primaryDark: string,
     background: string,
     paper: string,
     accent: string,
     error: string,
     text: string,
-    secondaryText: string,
     disabled: string,
     placeholder: string,
     helperText: string,

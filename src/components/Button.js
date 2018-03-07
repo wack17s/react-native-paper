@@ -1,8 +1,8 @@
 /* @flow */
 
-import color from 'color';
 import * as React from 'react';
 import { ActivityIndicator, Animated, View, StyleSheet } from 'react-native';
+import color from 'color';
 import Icon from './Icon';
 import Paper from './Paper';
 import Text from './Typography/Text';
@@ -40,10 +40,7 @@ type Props = {
    */
   loading?: boolean,
   /**
-   * Name of the icon. Can be a string (name of `MaterialIcon`),
-   * an object of shape `{ uri: 'https://path.to' }`,
-   * a local image: `require('../path/to/image.png')`,
-   * or a valid React Native component.
+   * Name of the icon. Can be a string, an image source or a react component.
    */
   icon?: IconSource,
   /**
@@ -80,6 +77,9 @@ type State = {
  *
  * ## Usage
  * ```js
+ * import * as React from 'react';
+ * import { Button } from 'react-native-paper';
+ *
  * const MyComponent = () => (
  *   <Button raised onPress={() => console.log('Pressed')}>
  *     Press me

@@ -49,11 +49,11 @@ type Props = {
   /**
    * Whether the input can have multiple lines.
    */
-  multiline: boolean,
+  multiline?: boolean,
   /**
    * The number of lines to show in the input (Android only).
    */
-  numberOfLines: number,
+  numberOfLines?: number,
   /**
    * Callback that is called when the text input is focused.
    */
@@ -95,6 +95,9 @@ type State = {
  *
  * ## Usage
  * ```js
+ * import * as React from 'react';
+ * import { TextInput } from 'react-native-paper';
+ *
  * class MyComponent extends React.Component {
  *   state = {
  *     text: ''
@@ -120,6 +123,7 @@ class TextInput extends React.Component<Props, State> {
   static defaultProps = {
     disabled: false,
     hasError: false,
+    multiline: false,
   };
 
   constructor(props) {
