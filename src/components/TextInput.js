@@ -429,7 +429,7 @@ class TextInput extends React.Component<Props, State> {
             ]}
           />
         </View>
-        {(helperText || errorText) && (
+        {helperText || errorText ? (
           <Animated.View style={underlineArea}>
             {this.renderUnderlineText(
               helperText,
@@ -442,7 +442,7 @@ class TextInput extends React.Component<Props, State> {
               errorTextColor
             )}
           </Animated.View>
-        )}
+        ) : null}
       </View>
     );
   }
