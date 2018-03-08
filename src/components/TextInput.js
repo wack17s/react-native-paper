@@ -13,6 +13,12 @@ import type { Theme } from '../types';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
+const minimizedLabelYOffset = -22;
+const maximizedLabelFontSize = 16;
+const minimizedLabelFontSize = 12;
+const labelWiggleXOffset = 4;
+const underlineAreaHeight = 16;
+
 type Props = {
   /**
    * If true, user won't be able to interact with the component.
@@ -285,23 +291,23 @@ class TextInput extends React.Component<Props, State> {
       value && hasError
         ? this.state.errorShown.interpolate({
             inputRange: [0, 0.5, 1],
-            outputRange: [0, 4, 0],
+            outputRange: [0, labelWiggleXOffset, 0],
           })
         : 0;
 
     /* Move label to top if value is set */
     const labelTranslateY = value
-      ? -22
+      ? minimizedLabelYOffset
       : this.state.focused.interpolate({
           inputRange: [0, 1],
-          outputRange: [0, -22],
+          outputRange: [0, minimizedLabelYOffset],
         });
 
     const labelFontSize = value
-      ? 12
+      ? minimizedLabelFontSize
       : this.state.focused.interpolate({
           inputRange: [0, 1],
-          outputRange: [16, 12],
+          outputRange: [maximizedLabelFontSize, minimizedLabelFontSize],
         });
 
     const labelStyle = {
@@ -316,7 +322,7 @@ class TextInput extends React.Component<Props, State> {
 
     const underlineArea = {
       height: Animated.multiply(
-        16,
+        underlineAreaHeight,
         helperText ? 1 : errorText ? this.state.errorShown : 0
       ),
       width: '100%',
@@ -335,7 +341,7 @@ class TextInput extends React.Component<Props, State> {
         {
           translateY: this.state.errorShown.interpolate({
             inputRange: [0, 1],
-            outputRange: [-16, 0],
+            outputRange: [-underlineAreaHeight, 0],
           }),
         },
       ],
