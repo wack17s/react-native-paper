@@ -1,6 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
+import colorModule from 'color';
 import {
   View,
   Animated,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 import Text from './Typography/Text';
 import withTheme from '../core/withTheme';
+import { black, white } from '../styles/colors';
 import type { Theme } from '../types';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -247,6 +249,18 @@ class TextInput extends React.Component<Props, State> {
     );
   }
 
+  static getHelperTextColor(dark: boolean) {
+    return dark
+      ? colorModule(white)
+          .alpha(0.7)
+          .rgb()
+          .string()
+      : colorModule(black)
+          .alpha(0.54)
+          .rgb()
+          .string();
+  }
+
   render() {
     const {
       value,
@@ -276,7 +290,9 @@ class TextInput extends React.Component<Props, State> {
       labelColor = (hasError && errorColor) || primaryColor;
       bottomLineColor = underlineColor || primaryColor;
       helperTextColor =
-        underlineColor || (hasError && errorTextColor) || colors.helperText;
+        underlineColor ||
+        (hasError && errorTextColor) ||
+        TextInput.getHelperTextColor(dark);
     } else {
       inputTextColor = labelColor = bottomLineColor = helperTextColor = inactiveColor;
     }
