@@ -347,7 +347,10 @@ class TextInput extends React.Component<Props, State> {
       ],
     };
 
-    const bottomLineStyle = (color: string, animatedValue: Animated.Value) => ({
+    const getBottomLineStyle = (
+      color: string,
+      animatedValue: Animated.Value
+    ) => ({
       backgroundColor: color,
       transform: [{ scaleX: animatedValue }],
       opacity: animatedValue.interpolate({
@@ -395,14 +398,14 @@ class TextInput extends React.Component<Props, State> {
             style={[
               styles.bottomLine,
               styles.focusLine,
-              bottomLineStyle(bottomLineColor, this.state.focused),
+              getBottomLineStyle(bottomLineColor, this.state.focused),
             ]}
           />
           <Animated.View
             style={[
               styles.bottomLine,
               styles.focusLine,
-              bottomLineStyle(
+              getBottomLineStyle(
                 errorColor,
                 // $FlowFixMe$
                 Animated.multiply(this.state.focused, this.state.errorShown)
