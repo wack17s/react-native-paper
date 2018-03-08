@@ -407,7 +407,7 @@ class TextInput extends React.Component<Props, State> {
           <View
             style={[
               styles.bottomLine,
-              { backgroundColor: (hasError && errorColor) || inactiveColor },
+              { backgroundColor: hasError ? errorColor : inactiveColor },
             ]}
           />
           <Animated.View
