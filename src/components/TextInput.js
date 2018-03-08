@@ -274,7 +274,7 @@ class TextInput extends React.Component<Props, State> {
       theme,
       ...rest
     } = this.props;
-    const { colors, fonts } = theme;
+    const { colors, fonts, dark } = theme;
     const fontFamily = fonts.regular;
     const {
       primary: primaryColor,
