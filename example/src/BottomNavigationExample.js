@@ -51,6 +51,7 @@ export default class ButtomNavigationExample extends React.Component<{}, any> {
         navigationState={this.state}
         onIndexChange={this._handleIndexChange}
         renderScene={this._renderScene}
+        shifting={false}
       />
     );
   }
