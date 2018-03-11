@@ -8,15 +8,7 @@ type Props = {
   close: Function,
 };
 
-type State = {
-  value: string,
-};
-
-export default class extends React.Component<Props, State> {
-  state = {
-    value: '',
-  };
-
+export default class extends React.Component<Props> {
   render() {
     return (
       <ListDialog
@@ -26,15 +18,34 @@ export default class extends React.Component<Props, State> {
         onOk={this.props.close}
         onCancel={this.props.close}
         data={[
-          { value: 'First', label: 'First option' },
-          { value: 'Second', label: 'Second option' },
-          { value: 'Third', label: 'Third option' },
-          { value: 'bla', label: 'bla bla' },
-          { value: 'blabla', label: 'bla bla bla' },
+          {
+            id: 'First',
+            label: 'First option',
+            checked: true,
+          },
+          {
+            id: 'Second',
+            label: 'Second option',
+            checked: false,
+          },
+          {
+            id: 'Third',
+            label: 'Third option',
+            checked: false,
+          },
+          {
+            id: 'bla',
+            label: 'bla bla',
+            checked: false,
+          },
+          {
+            id: 'blabla',
+            label: 'bla bla bla',
+            checked: false,
+          },
         ]}
-        color="blue"
-        onChange={value => this.setState({ value })}
-        value={this.state.value}
+        onChange={() => {}}
+        multiselect
       />
     );
   }
