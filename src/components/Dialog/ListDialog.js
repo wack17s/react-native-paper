@@ -13,24 +13,61 @@ import Subheading from '../Typography/Subheading';
 import Button from '../Button';
 
 type Props = {
+  /**
+   * Dialog's title displayed on top.
+   */
   title: string,
+  /**
+   * Determines whether the dialog is visible.
+   */
   visible: boolean,
+  /**
+   * Callback that is called when the user dismisses the dialog.
+   */
   onDismiss: Function,
+  /**
+   * Stae for the list dialog. The state is an array of objects that should contain the following properties:
+   *
+   * - `id`: a string representing id of list item.
+   * - `label`: a string that will be displayed as list item.
+   * - `checked`: a boolean that determines initial value of list item.
+   *
+   * Example:
+   *
+   * ```js
+   * [
+   *   { id: 'first', label: 'First option', checked: true },
+   *   { id: 'second', label: 'Second option', checked: false },
+   *   { id: 'third', label: 'Third option', checked: false },
+   * ]
+   * ```
+   *
+   * `ListDialog` is uncontrolled component, which means you won't be notified about every change of the state.
+   * You can get dialog state as an argument of onDismiss callback + etc. TODO: Add more content here
+   */
   data: Array<{
-    id: string | number,
+    id: string,
     label: string,
     checked: boolean,
   }>,
+  // TODO: Refactor actions
   onCancel?: Function,
   onOk?: Function,
+  /**
+   * Max height of the content section, if content is bigger it will be scrollable
+   */
   maxHeight?: number,
+  // Color that will be applied to Checkbox and RadioButton
   color?: string,
+  /**
+   * Determines if only one elemenmt can be checked or more at the same time
+   */
   multiselect: boolean,
 };
 
 type State = {
   values: Array<{
-    id: string | number,
+    id: string,
     label: string,
     checked: boolean,
   }>,
