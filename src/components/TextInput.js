@@ -1,17 +1,16 @@
 /* @flow */
 
 import * as React from 'react';
-import colorModule from 'color';
 import {
   View,
   Animated,
   TextInput as NativeTextInput,
   StyleSheet,
 } from 'react-native';
+import HelperText from './HelperText';
 import Text from './Typography/Text';
 import withTheme from '../core/withTheme';
-import { black, white } from '../styles/colors';
-import type { Theme } from '../types';
+import { type Theme } from '../types';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -19,7 +18,6 @@ const minimizedLabelYOffset = -22;
 const maximizedLabelFontSize = 16;
 const minimizedLabelFontSize = 12;
 const labelWiggleXOffset = 4;
-const underlineAreaHeight = 16;
 
 type Props = {
   /**
@@ -239,28 +237,6 @@ class TextInput extends React.Component<Props, State> {
     return this._root.blur(...args);
   }
 
-  renderUnderlineText(text?: string, containerStyle: Object, color: string) {
-    return (
-      text && (
-        <Animated.View style={containerStyle}>
-          {text && <Text style={[styles.helperText, { color }]}>{text}</Text>}
-        </Animated.View>
-      )
-    );
-  }
-
-  static getHelperTextColor(dark: boolean) {
-    return dark
-      ? colorModule(white)
-          .alpha(0.7)
-          .rgb()
-          .string()
-      : colorModule(black)
-          .alpha(0.54)
-          .rgb()
-          .string();
-  }
-
   render() {
     const {
       value,
@@ -274,27 +250,22 @@ class TextInput extends React.Component<Props, State> {
       theme,
       ...rest
     } = this.props;
-    const { colors, fonts, dark } = theme;
+    const { colors, fonts } = theme;
     const fontFamily = fonts.regular;
     const {
       primary: primaryColor,
       disabled: inactiveColor,
       error: errorColor,
-      errorText: errorTextColor,
     } = colors;
 
-    let inputTextColor, labelColor, bottomLineColor, helperTextColor;
+    let inputTextColor, labelColor, bottomLineColor;
 
     if (!disabled) {
       inputTextColor = colors.text;
       labelColor = (hasError && errorColor) || primaryColor;
       bottomLineColor = underlineColor || primaryColor;
-      helperTextColor =
-        underlineColor ||
-        (hasError && errorTextColor) ||
-        TextInput.getHelperTextColor(dark);
     } else {
-      inputTextColor = labelColor = bottomLineColor = helperTextColor = inactiveColor;
+      inputTextColor = labelColor = bottomLineColor = inactiveColor;
     }
 
     const labelColorAnimation = this.state.focused.interpolate({
@@ -333,33 +304,6 @@ class TextInput extends React.Component<Props, State> {
       transform: [
         { translateX: labelTranslateX },
         { translateY: labelTranslateY },
-      ],
-    };
-
-    const underlineArea = {
-      height: Animated.multiply(
-        underlineAreaHeight,
-        helperText ? 1 : errorText ? this.state.errorShown : 0
-      ),
-      width: '100%',
-    };
-
-    const helperTextContainer = {
-      opacity: errorText
-        ? Animated.add(1, Animated.multiply(this.state.errorShown, -1))
-        : 1,
-    };
-
-    const errorTextContainer = {
-      position: 'absolute',
-      opacity: this.state.errorShown,
-      transform: [
-        {
-          translateY: this.state.errorShown.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-underlineAreaHeight, 0],
-          }),
-        },
       ],
     };
 
@@ -429,20 +373,13 @@ class TextInput extends React.Component<Props, State> {
             ]}
           />
         </View>
-        {helperText || errorText ? (
-          <Animated.View style={underlineArea}>
-            {this.renderUnderlineText(
-              helperText,
-              helperTextContainer,
-              helperTextColor
-            )}
-            {this.renderUnderlineText(
-              errorText,
-              errorTextContainer,
-              errorTextColor
-            )}
-          </Animated.View>
-        ) : null}
+        <HelperText
+          disabled={disabled}
+          helperText={helperText}
+          errorText={errorText}
+          hasError={hasError}
+          activeColor={underlineColor}
+        />
       </View>
     );
   }
@@ -478,10 +415,6 @@ const styles = StyleSheet.create({
   },
   focusLine: {
     height: StyleSheet.hairlineWidth * 4,
-  },
-  helperText: {
-    fontSize: 12,
-    marginTop: 4,
   },
 });
 
