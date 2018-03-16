@@ -26,7 +26,7 @@ type Props = {
    */
   onDismiss: Function,
   /**
-   * Stae for the list dialog. The state is an array of objects that should contain the following properties:
+   * State for the list dialog. The state is an array of objects that should contain the following properties:
    *
    * - `id`: a string representing id of list item.
    * - `label`: a string that will be displayed as list item.
@@ -43,21 +43,40 @@ type Props = {
    * ```
    *
    * `ListDialog` is uncontrolled component, which means you won't be notified about every change of the state.
-   * You can get dialog state as an argument of onDismiss callback + etc. TODO: Add more content here
+   * You can get dialog state from onDismiss callback as first argument + etc. TODO: Add more content here
    */
-  data: Array<{
+  listData: Array<{
     id: string,
     label: string,
     checked: boolean,
   }>,
-  // TODO: Refactor actions
-  onCancel?: Function,
-  onOk?: Function,
   /**
-   * Max height of the content section, if content is bigger it will be scrollable
+   * Array of objects that are transformed on Buttons. Objects should have following properties:
+   *
+   * - `text`: a string that will be displayed inside button.
+   * - `callback`: a function that will be invoked on button press.
+   * - Any other prop that Button takes.
+   *
+   * Example:
+   *
+   * ```js
+   * [
+   *   { text: 'Cancel', callback: () => console.log('pressed') },
+   *   { text: 'Ok', callback: () => console.log('pressed'), primary: true },
+   * ]
+   * ```
+   */
+  actions: Array<{
+    text: string,
+    callback: Function,
+  }>,
+  /**
+   * Max height of the content section, if content is higher it will be scrollable
    */
   maxHeight?: number,
-  // Color that will be applied to Checkbox and RadioButton
+  /**
+   * Color that will be applied to Checkbox and RadioButton
+   */
   color?: string,
   /**
    * Determines if only one elemenmt can be checked or more at the same time
@@ -77,7 +96,7 @@ class ListDialog extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      values: [...props.data],
+      values: [...props.listData],
     };
   }
 
@@ -105,7 +124,7 @@ class ListDialog extends React.Component<Props, State> {
     });
   };
 
-  renderMultiselct = () => {
+  renderMultiselect = () => {
     const { color } = this.props;
     const { values } = this.state;
     return values.map(({ label, id, checked }) => (
@@ -140,8 +159,7 @@ class ListDialog extends React.Component<Props, State> {
       title,
       onDismiss,
       visible,
-      onCancel,
-      onOk,
+      actions,
       maxHeight,
       multiselect,
     } = this.props;
@@ -154,21 +172,21 @@ class ListDialog extends React.Component<Props, State> {
           <ScrollView>
             <View>
               {multiselect
-                ? this.renderMultiselct()
+                ? this.renderMultiselect()
                 : this.renderSingleselect()}
             </View>
           </ScrollView>
         </DialogScrollArea>
         <DialogActions>
-          <Button
-            primary
-            onPress={() => onCancel && onCancel(this.state.values)}
-          >
-            Cancel
-          </Button>
-          <Button primary onPress={() => onOk && onOk(this.state.values)}>
-            Ok
-          </Button>
+          {actions.map(({ text, callback, primary, ...rest }) => (
+            <Button
+              {...rest}
+              key={text}
+              onPress={() => callback(this.state.values)}
+            >
+              {text}
+            </Button>
+          ))}
         </DialogActions>
       </Dialog>
     );
