@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { AnimatedFAB, withTheme, Button } from 'react-native-paper';
+import { FABGroup, withTheme, Button } from 'react-native-paper';
 import type { Theme } from 'react-native-paper/types';
 
 type Props = {
@@ -13,13 +13,18 @@ type State = {
   loading: boolean,
 };
 
-const items = [
+const actions = [
+  {
+    icon: 'today',
+    onPress: () => {},
+    primary: true,
+  },
   { icon: 'add', onPress: () => {} },
   { icon: 'today', label: 'Calendar', onPress: () => {} },
   { icon: 'email', label: 'Email', onPress: () => {} },
   { icon: 'star', onPress: () => {} },
 ];
-class AnimatedFABExample extends React.Component<Props, State> {
+class FABGroupExample extends React.Component<Props, State> {
   static title = 'Animated';
 
   state = {
@@ -35,7 +40,7 @@ class AnimatedFABExample extends React.Component<Props, State> {
           <Button primary>Primary</Button>
           <Button>Custom</Button>
         </View>
-        <AnimatedFAB icon="add" items={items} />
+        <FABGroup animated icon="add" actions={actions} />
       </View>
     );
   }
@@ -47,4 +52,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withTheme(AnimatedFABExample);
+export default withTheme(FABGroupExample);

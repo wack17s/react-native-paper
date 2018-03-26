@@ -8,26 +8,30 @@ import {
   Easing,
   TouchableWithoutFeedback,
   StatusBar,
-  Platform,
 } from 'react-native';
 import Text from './Typography/Text';
 import Card from './Card/Card';
 import ThemedPortal from './Portal/ThemedPortal';
-
-import withTheme from '../core/withTheme';
-import type { Theme } from '../types';
-
 import FAB from './FAB';
+import withTheme from '../core/withTheme';
+
+import type { Theme } from '../types';
+import type { IconSource } from './Icon';
 
 type Props = {
-  items: Array<Item>,
+  actions: Array<Item>,
+  animated?: boolean,
+  icon: IconSource,
   theme: Theme,
+  open?: boolean,
+  onStateChange?: (state: { open: boolean }) => mixed,
 };
 
 type Item = {
   icon: string,
   label?: string,
-  onPress: () => void,
+  onPress: () => mixed,
+  primary?: boolean,
 };
 
 type State = {
@@ -35,67 +39,55 @@ type State = {
   isOpen: boolean,
 };
 
-class AnimatedFABExample extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
+class FABGroup extends React.Component<Props, State> {
+  state = {
+    animatedValue: new Animated.Value(0),
+    isOpen: typeof this.props.open === 'boolean' ? this.props.open : false,
+  };
 
-    this.state = {
-      animatedValue: new Animated.Value(0),
-      isOpen: false,
-    };
+  componentWillReceiveProps(nextProps) {
+    if (
+      typeof nextProps.open === 'boolean' &&
+      nextProps.open !== this.state.isOpen
+    ) {
+      this.setState({
+        isOpen: nextProps.open,
+      });
+    }
   }
 
-  componentWillUpdate(_, nextState) {
-    Platform.OS === 'ios' && nextState.isOpen
-      ? StatusBar.setBarStyle('dark-content')
-      : StatusBar.setBarStyle('light-content');
-  }
-
-  _handleOpen = () =>
-    this.setState({ isOpen: true }, () => {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isOpen === prevState.isOpen) {
+      return;
+    }
+    if (this.state.isOpen) {
       Animated.timing(this.state.animatedValue, {
         toValue: 1,
-        duration: this.props.items.length * 100,
+        duration: this.props.actions.length * 100,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start();
-    });
-
-  _handleDismiss = () =>
-    this.setState({ isOpen: false }, () => {
+    } else {
       Animated.timing(this.state.animatedValue, {
         toValue: 0,
         duration: 200,
         easing: Easing.sin,
         useNativeDriver: true,
       }).start();
-    });
+    }
+  }
 
-  toggleModal = () => {
-    if (this.state.isOpen) {
-      this._handleDismiss();
+  _toggleModal = () => {
+    if (this.props.onStateChange) {
+      this.props.onStateChange({ open: !this.state.isOpen });
     } else {
-      this._handleOpen();
+      this.setState(state => ({ isOpen: !state.isOpen }));
     }
   };
 
   render() {
-    const { colors, fonts } = this.props.theme;
-    const { items } = this.props;
-
-    const buttonRotate = this.state.animatedValue.interpolate(
-      this.state.isOpen
-        ? {
-            inputRange: [0, 0.5, 1],
-            // $FlowFixMe
-            outputRange: ['0deg', '135deg', '135deg'],
-          }
-        : {
-            inputRange: [0, 1],
-            // $FlowFixMe
-            outputRange: ['0deg', '135deg'],
-          }
-    );
+    const { colors, fonts, dark } = this.props.theme;
+    const { actions } = this.props;
 
     const backdropOpacity = this.state.isOpen
       ? this.state.animatedValue.interpolate({
@@ -105,18 +97,18 @@ class AnimatedFABExample extends React.Component<Props, State> {
         })
       : this.state.animatedValue;
 
-    const length = items.length + 1;
+    const length = actions.length + 1;
     const inputRange = Array.from({ length }).map(
       (_, i) => i * (1 / (length - 1))
     );
 
-    const opacities = items.map(
+    const opacities = actions.map(
       (_, index, self) =>
         this.state.isOpen
           ? this.state.animatedValue.interpolate({
               inputRange,
               outputRange: inputRange.map(
-                (_, i) => (i < self.length - index ? 0 : 1)
+                (x, i) => (i < self.length - index ? 0 : 1)
               ),
             })
           : this.state.animatedValue
@@ -133,20 +125,36 @@ class AnimatedFABExample extends React.Component<Props, State> {
           : 1
     );
 
+    const primaryAction = this.props.actions.find(action => action.primary);
+
     return (
       <ThemedPortal>
+        {this.state.isOpen && (
+          <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} />
+        )}
         <View pointerEvents="box-none" style={styles.container}>
-          <TouchableWithoutFeedback onPress={this._handleDismiss}>
+          <TouchableWithoutFeedback onPress={this._toggleModal}>
             <Animated.View
               pointerEvents={this.state.isOpen ? 'auto' : 'none'}
-              style={[styles.backdrop, { opacity: backdropOpacity }]}
+              style={[
+                styles.backdrop,
+                {
+                  opacity: backdropOpacity,
+                  backgroundColor: dark
+                    ? 'rgba(0, 0, 0, 0.6)'
+                    : 'rgba(255, 255, 255, 0.9)',
+                },
+              ]}
             />
           </TouchableWithoutFeedback>
-          <View pointerEvents={this.state.isOpen ? 'auto' : 'none'}>
-            {items.map((it, i) => {
+          <View pointerEvents={this.state.isOpen ? 'box-none' : 'none'}>
+            {actions.map((it, i) => {
+              if (it.primary) {
+                return null;
+              }
               return (
                 <Animated.View
-                  key={i}
+                  key={i} //eslint-disable-line
                   style={[
                     {
                       opacity: opacities[i],
@@ -154,7 +162,7 @@ class AnimatedFABExample extends React.Component<Props, State> {
                   ]}
                   pointerEvents="box-none"
                 >
-                  <View style={[styles.item]}>
+                  <View style={styles.item} pointerEvents="box-none">
                     {it.label && (
                       <Card
                         style={[
@@ -189,9 +197,19 @@ class AnimatedFABExample extends React.Component<Props, State> {
           </View>
           <FAB
             dark
-            onPress={this.toggleModal}
-            icon="add"
-            style={[styles.fab, { transform: [{ rotate: buttonRotate }] }]}
+            animated={this.props.animated}
+            onPress={() => {
+              if (this.state.isOpen && primaryAction && primaryAction.onPress) {
+                primaryAction.onPress();
+              }
+              this._toggleModal();
+            }}
+            icon={
+              this.state.isOpen
+                ? primaryAction ? primaryAction.icon : 'close'
+                : this.props.icon
+            }
+            style={styles.fab}
           />
         </View>
       </ThemedPortal>
@@ -212,7 +230,6 @@ const styles = StyleSheet.create({
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, .9)',
   },
   label: {
     borderRadius: 5,
@@ -231,4 +248,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withTheme(AnimatedFABExample);
+export default withTheme(FABGroup);
