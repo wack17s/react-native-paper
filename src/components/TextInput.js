@@ -7,10 +7,9 @@ import {
   TextInput as NativeTextInput,
   StyleSheet,
 } from 'react-native';
-import HelperText from './HelperText';
 import Text from './Typography/Text';
 import withTheme from '../core/withTheme';
-import { type Theme } from '../types';
+import type { Theme } from '../types';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -33,17 +32,9 @@ type Props = {
    */
   placeholder?: string,
   /**
-   * Helper text to display under the input.
-   */
-  helperText?: string,
-  /**
    * Whether to style the TextInput with error style.
    */
   hasError: boolean,
-  /**
-   * Text to replace the helper text with on error.
-   */
-  errorText?: string,
   /**
    * Callback that is called when the text input's text changes. Changed text is passed as an argument to the callback handler.
    */
@@ -242,9 +233,7 @@ class TextInput extends React.Component<Props, State> {
       value,
       disabled,
       label,
-      helperText,
       hasError,
-      errorText,
       underlineColor,
       style,
       theme,
@@ -373,13 +362,6 @@ class TextInput extends React.Component<Props, State> {
             ]}
           />
         </View>
-        <HelperText
-          disabled={disabled}
-          helperText={helperText}
-          errorText={errorText}
-          hasError={hasError}
-          activeColor={underlineColor}
-        />
       </View>
     );
   }
