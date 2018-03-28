@@ -245,13 +245,14 @@ class TextInput extends React.Component<Props, State> {
       primary: primaryColor,
       disabled: inactiveColor,
       error: errorColor,
+      errorText: errorTextColor,
     } = colors;
 
     let inputTextColor, labelColor, bottomLineColor;
 
     if (!disabled) {
       inputTextColor = colors.text;
-      labelColor = (hasError && errorColor) || primaryColor;
+      labelColor = (hasError && errorTextColor) || primaryColor;
       bottomLineColor = underlineColor || primaryColor;
     } else {
       inputTextColor = labelColor = bottomLineColor = inactiveColor;
