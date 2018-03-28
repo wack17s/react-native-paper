@@ -89,12 +89,9 @@ type State = {
  * }
  * ```
  */
-
 class HelperText extends React.Component<Props, State> {
   static defaultProps = {
-    disabled: false,
     hasError: false,
-    multiline: false,
   };
 
   constructor(props) {
