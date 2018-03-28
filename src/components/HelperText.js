@@ -51,12 +51,12 @@ type State = {
  *
  * <div class="screenshots">
  *   <figure>
- *     <img src="screenshots/textinput.unfocused.png" />
- *     <figcaption>Unfocused</span>
+ *     <img src="screenshots/textinput-helpertext.png" />
+ *     <figcaption>Without error</span>
  *   </figure>
  *   <figure>
- *     <img src="screenshots/textinput.focused.png" />
- *     <figcaption>Focused</figcaption>
+ *     <img src="screenshots/textinput-helpertext-error.png" />
+ *     <figcaption>With error</figcaption>
  *   </figure>
  * </div>
  *
