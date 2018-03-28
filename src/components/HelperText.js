@@ -8,7 +8,7 @@ import withTheme from '../core/withTheme';
 import { black, white } from '../styles/colors';
 import type { Theme } from '../types';
 
-const underlineAreaHeight = 16;
+const helperTextHeight = 16;
 
 type Props = {
   /**
@@ -174,7 +174,7 @@ class HelperText extends React.Component<Props, State> {
 
     const underlineArea = {
       height: Animated.multiply(
-        underlineAreaHeight,
+        helperTextHeight,
         helperText ? 1 : errorText ? this.state.errorShown : 0
       ),
       width: '100%',
@@ -193,7 +193,7 @@ class HelperText extends React.Component<Props, State> {
         {
           translateY: this.state.errorShown.interpolate({
             inputRange: [0, 1],
-            outputRange: [-underlineAreaHeight, 0],
+            outputRange: [-helperTextHeight, 0],
           }),
         },
       ],
