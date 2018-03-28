@@ -1,8 +1,8 @@
 /* @flow */
 
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { TextInput, withTheme } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { TextInput, HelperText, withTheme } from 'react-native-paper';
 import type { Theme } from 'react-native-paper/types';
 
 type Props = {
@@ -33,16 +33,20 @@ class TextInputExample extends React.Component<Props, State> {
           value={this.state.text}
           onChangeText={text => this.setState({ text })}
         />
-        <TextInput
-          style={styles.inputContainerStyle}
-          label="Input with helper text"
-          placeholder="Type more than three characters"
-          helperText="Helper text"
-          value={this.state.errorInputText}
-          hasError={this.state.errorInputText.length > 3}
-          errorText="Error text"
-          onChangeText={errorInputText => this.setState({ errorInputText })}
-        />
+        <View style={styles.inputContainerStyle}>
+          <TextInput
+            label="Input with helper text"
+            placeholder="Type more than three characters"
+            value={this.state.errorInputText}
+            hasError={this.state.errorInputText.length > 3}
+            onChangeText={errorInputText => this.setState({ errorInputText })}
+          />
+          <HelperText
+            helperText="Helper text"
+            errorText="Error text"
+            hasError={this.state.errorInputText.length > 3}
+          />
+        </View>
         <TextInput
           disabled
           style={styles.inputContainerStyle}
