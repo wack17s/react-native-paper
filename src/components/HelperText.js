@@ -14,10 +14,6 @@ type Props = {
   /**
    * If true, user won't be able to interact with the component.
    */
-  disabled?: boolean,
-  /**
-   * Helper text to display under the input.
-   */
   helperText?: string,
   /**
    * Whether to style the TextInput with error style.
@@ -28,9 +24,10 @@ type Props = {
    */
   errorText?: string,
   /**
-   * Underline color of the input.
+   * @optional
+   * Text color to use.
    */
-  activeColor?: string,
+  color?: string,
   style?: any,
   /**
    * @optional
@@ -154,23 +151,12 @@ class HelperText extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      disabled,
-      helperText,
-      hasError,
-      errorText,
-      style,
-      theme,
-      activeColor,
-    } = this.props;
+    const { helperText, hasError, errorText, style, theme, color } = this.props;
     const { colors, dark } = theme;
-    const { disabled: inactiveColor, errorText: errorTextColor } = colors;
+    const { errorText: errorTextColor } = colors;
 
-    const helperTextColor = disabled
-      ? inactiveColor
-      : activeColor ||
-        (hasError && errorTextColor) ||
-        this.getHelperTextColor(dark);
+    const helperTextColor =
+      color || (hasError && errorTextColor) || this.getHelperTextColor(dark);
 
     const underlineArea = {
       height: Animated.multiply(
