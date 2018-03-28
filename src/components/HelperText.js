@@ -12,15 +12,18 @@ const helperTextHeight = 16;
 
 type Props = {
   /**
-   * If true, user won't be able to interact with the component.
+   * @optional
+   * Helper text to display.
    */
   helperText?: string,
   /**
+   * @optional
    * Whether to style the TextInput with error style.
    */
-  hasError: boolean,
+  hasError?: boolean,
   /**
-   * Text to replace the helper text with on error.
+   * @optional
+   * Text to replace the helper text with on error. If none set, will use the helperText value.
    */
   errorText?: string,
   /**
@@ -28,6 +31,10 @@ type Props = {
    * Text color to use.
    */
   color?: string,
+  /**
+   * @optional
+   * Optional style to apply to the container.
+   */
   style?: any,
   /**
    * @optional
@@ -40,7 +47,7 @@ type State = {
 };
 
 /**
- * TextInputs allow users to input text.
+ * Helper text is used in conjuction with input elements to provide additional hints for the user.
  *
  * <div class="screenshots">
  *   <figure>
@@ -56,7 +63,7 @@ type State = {
  * ## Usage
  * ```js
  * import * as React from 'react';
- * import { TextInput } from 'react-native-paper';
+ * import { HelperText, TextInput } from 'react-native-paper';
  *
  * class MyComponent extends React.Component {
  *   state = {
@@ -65,18 +72,22 @@ type State = {
  *
  *   render(){
  *     return (
- *       <TextInput
- *         label='Email'
- *         value={this.state.text}
- *         onChangeText={text => this.setState({ text })}
- *       />
+ *       <View>
+ *         <TextInput
+ *           label="Email"
+ *           value={this.state.text}
+ *           onChangeText={text => this.setState({ text })}
+ *         />
+ *         <HelperText
+ *           helperText="Helper Text"
+ *           errorText="Error!"
+ *           hasError={this.state.text.length > 12}
+ *         />
+ *       </View>
  *     );
  *   }
  * }
  * ```
- *
- * @extends TextInput props https://facebook.github.io/react-native/docs/textinput.html#props
- *
  */
 
 class HelperText extends React.Component<Props, State> {
