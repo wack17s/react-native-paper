@@ -34,6 +34,7 @@ export { default as ProgressBar } from './components/ProgressBar/ProgressBar';
 export { default as RadioButton } from './components/RadioButton';
 export { default as RadioButtonGroup } from './components/RadioButtonGroup';
 export { default as SearchBar } from './components/SearchBar';
+export { default as SnackBar } from './components/SnackBar';
 export { default as Switch } from './components/Switch';
 export { default as Toolbar } from './components/Toolbar/Toolbar';
 export { default as ToolbarAction } from './components/Toolbar/ToolbarAction';
