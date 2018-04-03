@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 
 import withTheme from '../core/withTheme';
 import Button from './Button';
@@ -27,20 +27,33 @@ type Props = {
 };
 
 type State = {
-  singleLine: boolean,
+  shown: Animated.Value,
+  yPosition: Animated.Value,
 };
 
 class SnackBar extends React.Component<Props, State> {
-  state = {
-    singleLine: true,
-  };
+  constructor(props) {
+    super(props);
 
-  onLayout = event => {
-    const { height } = event.nativeEvent.layout;
-    if (height > 48) {
-      this.setState({ singleLine: false });
-    }
-  };
+    this.state = {
+      shown: new Animated.Value(0),
+      yPosition: new Animated.Value(-48),
+    };
+  }
+
+  componentDidMount() {
+    Animated.parallel([
+      Animated.timing(this.state.shown, {
+        toValue: 1,
+        duration: 500,
+      }),
+      Animated.timing(this.state.yPosition, {
+        easing: Easing.ease,
+        toValue: 0,
+        duration: 500,
+      }),
+    ]).start();
+  }
 
   render() {
     const {
@@ -53,34 +66,38 @@ class SnackBar extends React.Component<Props, State> {
       backgroundColor,
     } = this.props;
 
-    const { singleLine } = this.state;
-    const marginVertical = singleLine ? 14 : 24;
-
     const shouldRenderButton = onPress && buttonText;
     const buttonMargin = shouldRenderButton ? 8 : 0;
     const contentRightMargin = shouldRenderButton ? 0 : 24;
 
     return (
-      <View
-        onLayout={this.onLayout}
+      <Animated.View
         style={[
           styles.container,
-          { backgroundColor: backgroundColor || grey850 },
+          {
+            backgroundColor: backgroundColor || grey850,
+            position: 'absolute',
+            transform: [
+              {
+                translateY: this.state.yPosition,
+              },
+            ],
+          },
         ]}
       >
-        <Text
+        <Animated.Text
           style={[
             styles.content,
             {
               fontFamily: fonts.regular,
-              marginVertical,
               marginRight: contentRightMargin,
               color: color || white,
+              opacity: this.state.shown,
             },
           ]}
         >
           {content}
-        </Text>
+        </Animated.Text>
         {shouldRenderButton ? (
           <Button
             color={buttonColor || colors.accent}
@@ -90,7 +107,7 @@ class SnackBar extends React.Component<Props, State> {
             {buttonText || ''}
           </Button>
         ) : null}
-      </View>
+      </Animated.View>
     );
   }
 }
@@ -104,6 +121,7 @@ const styles = StyleSheet.create({
   },
   content: {
     marginLeft: 24,
+    marginVertical: 14,
     flexWrap: 'wrap',
     flex: 1,
     fontSize: 14,
