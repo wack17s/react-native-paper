@@ -47,21 +47,21 @@ export default class Showcase extends React.Component<{}> {
                     </h3>
                     <div {...styles(badgeContainer)}>
                       <a
-                        href={data.ios || null}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ opacity: data.ios ? '1' : '0.40' }}
-                      >
-                        <IphoneIcon color={tintColor} />
-                      </a>
-                      <div {...styles(separation)} />
-                      <a
                         href={data.android || null}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ opacity: data.android ? '1' : '0.40' }}
                       >
                         <GooglePlayIcon color={tintColor} />
+                      </a>
+                      <div {...styles(separation)} />
+                      <a
+                        href={data.ios || null}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ opacity: data.ios ? '1' : '0.40' }}
+                      >
+                        <IphoneIcon color={tintColor} />
                       </a>
                     </div>
                   </div>
@@ -93,10 +93,7 @@ const elevated = css`
 `;
 
 const appName = css`
-  font-size: 18px;
-  @media (min-width: 680px) {
-    margin: 0 10px;
-  }
+  font-size: 16px;
 `;
 
 const gallery = css`
@@ -113,7 +110,7 @@ const gallery = css`
 
 const info = css`
   height: 96px;
-  padding: 10px;
+  padding: 12px;
   transform: translateY(0);
   transition: 150ms;
 `;
@@ -148,9 +145,9 @@ const badgeContainer = css`
   display: flex;
   flex-direction: row;
   margin-top: 16px;
-  padding-left: 12px;
+  padding-left: 3px;
 `;
 
 const separation = css`
-  padding: 0 5px;
+  margin: 0 10px;
 `;
