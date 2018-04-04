@@ -34,7 +34,7 @@ class SearchExample extends React.Component<Props, State> {
             content="Some text. What do you think?"
             onPress={() => {}}
             finished={() => this.setState({ show: false })}
-            duration={2000}
+            duration={5000}
           />
         ) : null}
       </View>
