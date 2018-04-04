@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { StyleSheet, Animated, Easing } from 'react-native';
 
 import withTheme from '../core/withTheme';
 import Button from './Button';
@@ -20,6 +20,8 @@ type Props = {
    * Text of the button
    */
   buttonText?: string,
+  duration: number,
+  finished: () => any,
   color?: string,
   buttonColor?: string,
   backgroundColor?: string,
@@ -32,28 +34,55 @@ type State = {
 };
 
 class SnackBar extends React.Component<Props, State> {
+  static defaultProps = {
+    duration: 3000,
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
       shown: new Animated.Value(0),
-      yPosition: new Animated.Value(-48),
+      yPosition: new Animated.Value(48),
     };
   }
+
+  hideTimeout: number;
 
   componentDidMount() {
     Animated.parallel([
       Animated.timing(this.state.shown, {
+        easing: Easing.out(Easing.sin),
         toValue: 1,
-        duration: 500,
+        duration: 250,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.yPosition, {
-        easing: Easing.ease,
+        easing: Easing.out(Easing.sin),
         toValue: 0,
-        duration: 500,
+        duration: 250,
+        useNativeDriver: true,
       }),
     ]).start();
+    this.hideTimeout = setTimeout(this.hide, this.props.duration);
   }
+
+  hide = () => {
+    Animated.parallel([
+      Animated.timing(this.state.shown, {
+        easing: Easing.out(Easing.sin),
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(this.state.yPosition, {
+        easing: Easing.out(Easing.sin),
+        toValue: 48,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start(this.props.finished);
+  };
 
   render() {
     const {
@@ -76,7 +105,6 @@ class SnackBar extends React.Component<Props, State> {
           styles.container,
           {
             backgroundColor: backgroundColor || grey850,
-            position: 'absolute',
             transform: [
               {
                 translateY: this.state.yPosition,
@@ -102,7 +130,13 @@ class SnackBar extends React.Component<Props, State> {
           <Button
             color={buttonColor || colors.accent}
             style={[styles.buttonStyle, { marginHorizontal: buttonMargin }]}
-            onPress={onPress}
+            onPress={() => {
+              if (this.hideTimeout) {
+                clearTimeout(this.hideTimeout);
+              }
+              this.hide();
+              onPress && onPress();
+            }}
           >
             {buttonText || ''}
           </Button>
