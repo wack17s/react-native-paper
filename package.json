@@ -3,6 +3,7 @@
   "version": "1.2.6",
   "description": "Material design for React Native",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "files": [
     "src/"
   ],
@@ -18,7 +19,6 @@
   "homepage": "https://callstack.github.io/react-native-paper",
   "scripts": {
     "commitmsg": "node ./scripts/validate-commit-message.js $GIT_PARAMS",
-    "precommit": "yarn lint && yarn flow && yarn test",
     "flow": "flow",
     "lint": "eslint .",
     "test": "jest",
