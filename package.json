@@ -18,7 +18,6 @@
   },
   "homepage": "https://callstack.github.io/react-native-paper",
   "scripts": {
-    "commitmsg": "node ./scripts/validate-commit-message.js $GIT_PARAMS",
     "flow": "flow",
     "lint": "eslint .",
     "test": "jest",
